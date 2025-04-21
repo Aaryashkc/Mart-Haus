@@ -9,6 +9,8 @@ import SigninPage from './pages/SigninPage';
 import LoginPage from './pages/LoginPage';
 import { useAuthStore } from './store/UseAuthStore';
 import Contact from './pages/Contact';
+import Footer from './components/Footer';
+import { Toaster } from 'react-hot-toast';
 
 const App = () => {
   const {authUser, isCheckingAuth} = useAuthStore()
@@ -32,6 +34,8 @@ const App = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signin" element={<SigninPage />} />
       </Routes>
+      <Footer/>
+      <Toaster/>
 
     </div>
   )
