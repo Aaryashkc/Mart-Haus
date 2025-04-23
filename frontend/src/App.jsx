@@ -5,7 +5,6 @@ import AllProduct from './pages/AllProduct';
 import MyOrder from './pages/MyOrder';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
-import SigninPage from './pages/SigninPage';
 import LoginPage from './pages/LoginPage';
 import { useAuthStore } from './store/UseAuthStore';
 import Contact from './pages/Contact';
@@ -22,6 +21,9 @@ const App = () => {
       <LoaderCircle className='size-20 animate-spin' />
     </div>
   )
+
+  
+  const hideFooterRoutes = ['/login'];
   return (
     <div className='bg-secondary min-h-screen'>
       <Navbar/>
@@ -32,9 +34,11 @@ const App = () => {
       <Route path="/contact" element={<Contact />} />
       <Route path="/profile" element={authUser? <Profile /> :<Navigate to="/login" />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/signin" element={<SigninPage />} />
       </Routes>
-      <Footer/>
+
+      {!hideFooterRoutes &&  <Footer/>}
+
+
       <Toaster/>
 
     </div>

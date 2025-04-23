@@ -36,8 +36,8 @@ const Categories = () => {
   ];
 
   return (
-    <section className="py-16 bg-white text-fortext">
-      <div className="max-w-6xl mx-auto px-4">
+    <section className="py-16 bg-secondary text-fortext">
+      <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-10">
           <h2 className="text-4xl font-bold mb-4">Shop by <span className="text-primary">Category</span></h2>
           <p className="text-fortext max-w-2xl mx-auto">
@@ -45,7 +45,7 @@ const Categories = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-10">
           {categoryItems.map((category, index) => (
             <div 
               key={index} 

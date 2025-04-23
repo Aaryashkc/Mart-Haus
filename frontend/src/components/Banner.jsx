@@ -14,7 +14,7 @@ export default function Banner() {
   }, []);
 
   return (
-    <div className="w-full bg-banner py-6 px-4 relative overflow-hidden ">     
+    <div className="w-full bg-primary/10 py-6 px-4 relative overflow-hidden ">     
       <div className='max-w-[80%] h-[50%] mx-auto '>        
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 p-4">
     

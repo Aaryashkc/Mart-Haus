@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate} from 'react-router-dom'
 import Logo from '../assets/logo.png'
 import { Menu,Search, ShoppingCart, CircleUserRound} from 'lucide-react'
@@ -7,7 +7,10 @@ import { useAuthStore } from '../store/UseAuthStore'
 
 const Navbar = () => {
   const [open, setOpen] = React.useState(false)
+  const [cartItems, setCartItems] = useState([]);
+
     const {authUser, isCheckingAuth, setAuthUser} = useAuthStore()
+    const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
     const navigate = useNavigate();
     const logout = () => {
         setAuthUser(null)
@@ -32,8 +35,14 @@ const Navbar = () => {
               </div>
 
               <div className="relative cursor-pointer">
-                 <ShoppingCart onClick={()=>navigate('/cart')} className='size-8 text-fortext'/>
-                  <button  className="absolute -top-2 -right-3 text-xs text-secondary bg-tertiary w-[20px] h-[20px] rounded-full">3</button>
+                  <button className="p-2 rounded-full bg-white shadow hover:bg-gray-50">
+                  <ShoppingCart onClick={()=>navigate('/cart')} className='size-8 text-fortext'/>
+                    {cartItemCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                        {cartItemCount}
+                      </span>
+                    )}
+                  </button>
               </div>
 
             {!authUser?( <button onClick={()=>navigate('/login')} className="cursor-pointer px-8 py-2 bg-primary hover:bg-tertiary transition text-secondary rounded-md">
