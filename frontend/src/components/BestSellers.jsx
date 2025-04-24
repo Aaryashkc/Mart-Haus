@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Star, Heart, ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
 import Chair from "../assets/chair.jpg";
 import Clock from "../assets/clock.jpg";
@@ -6,8 +6,11 @@ import Light from "../assets/light.jpeg";
 import Pillow from "../assets/pillow.jpg";
 import Table from "../assets/Table.jpg";
 import { toast } from "react-hot-toast";
+import { useCartStore } from "../store/UseCartStore";
+import { useSearchStore } from "../store/UseSearchStore";
+import { useNavigate, Link } from "react-router-dom";
 
-const products = [
+export const products = [
   {
     id: 1,
     name: "Scandia Lounge Chair",
@@ -55,48 +58,35 @@ const products = [
   },
 ];
 
-const ProductCard = ({ id, name, price, image, rating, discount, offerPrice, cartItems, setCartItems, wishlist, setWishlist }) => {
-  const isInCart = cartItems.some(item => item.id === id);
-  const isInWishlist = wishlist.includes(id);
-  
-  const cartItem = cartItems.find(item => item.id === id);
+export const ProductCard = ({ id, name, price, image, rating, discount, offerPrice }) => {
+  const navigate = useNavigate();
+  const items = useCartStore(state => state.items);
+  const addItem = useCartStore(state => state.addItem);
+  const removeItem = useCartStore(state => state.removeItem);
+  const updateQuantity = useCartStore(state => state.updateQuantity);
+  const isInCart = items.some(item => item.id === id);
+  const cartItem = items.find(item => item.id === id);
   const quantity = cartItem ? cartItem.quantity : 0;
-  
+
   const handleAddToCart = () => {
-    if (isInCart) {
-      // Increase quantity
-      const updatedCart = cartItems.map(item => 
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      );
-      setCartItems(updatedCart);
-      toast.success(`Added another ${name} to cart`);
-    } else {
-      // Add new item
-      setCartItems([...cartItems, { id, name, price: offerPrice, image, quantity: 1 }]);
-      toast.success(`${name} added to cart`);
-    }
+    addItem({ id, name, price: offerPrice, image, quantity: 1 });
+    toast.success(isInCart ? `Added another ${name}` : `${name} added to cart`);
   };
-  
+
   const handleRemoveFromCart = () => {
-    setCartItems(cartItems.filter(item => item.id !== id));
+    removeItem(id);
     toast.error(`${name} removed from cart`);
   };
-  
+
   const handleDecreaseQuantity = () => {
     if (quantity > 1) {
-      const updatedCart = cartItems.map(item => 
-        item.id === id ? { ...item, quantity: item.quantity - 1 } : item
-      );
-      setCartItems(updatedCart);
+      updateQuantity(id, quantity - 1);
       toast.success(`Reduced ${name} quantity`);
-      toast(`Reduced ${name} quantity`, {
-        icon: '🗑️',
-      });
     } else {
       handleRemoveFromCart();
     }
   };
-  
+
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group">
       <div className="relative">
@@ -181,12 +171,15 @@ const ProductCard = ({ id, name, price, image, rating, discount, offerPrice, car
 };
 
 const BestSellers = () => {
-  const [cartItems, setCartItems] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
-  
-  const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
-  const cartTotal = cartItems.reduce((total, item) => total + (parseInt(item.price) * item.quantity), 0);
-  
+  const navigate = useNavigate();
+  const items = useCartStore(state => state.items);
+  const cartItemCount = items.reduce((total, item) => total + item.quantity, 0);
+  const cartTotal = items.reduce((total, item) => total + parseInt(item.price) * item.quantity, 0);
+  const query = useSearchStore(state => state.query);
+  const displayedProducts = query
+    ? products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()))
+    : products;
+
   return (
     <section className="py-16 bg-secondary">
       <div className="max-w-7xl mx-auto px-4">
@@ -197,9 +190,7 @@ const BestSellers = () => {
           </div>
           <div className="flex items-center gap-6">
             <div className="relative">
-            </div>
-            <div className="relative">
-              <button className="p-2 rounded-full bg-white shadow hover:bg-gray-50">
+              <button onClick={() => navigate('/cart')} className="p-2 rounded-full bg-white shadow hover:bg-gray-50">
                 <ShoppingCart size={20} className="text-gray-700" />
                 {cartItemCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
@@ -208,30 +199,23 @@ const BestSellers = () => {
                 )}
               </button>
             </div>
-            <a href="/shop" className="hidden md:inline-flex items-center text-primary font-medium hover:text-tertiary">
+            <Link to="/products" className="hidden md:inline-flex items-center text-primary font-medium hover:text-tertiary">
               View All Products
-            </a>
+            </Link>
           </div>
         </div>
         
         
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10">
-          {products.map((product) => (
-            <ProductCard 
-              key={product.id} 
-              {...product} 
-              cartItems={cartItems} 
-              setCartItems={setCartItems}
-              wishlist={wishlist}
-              setWishlist={setWishlist}
-            />
+          {displayedProducts.map(product => (
+            <ProductCard key={product.id} {...product} />
           ))}
         </div>
         
         <div className="mt-10 text-center md:hidden">
-          <a href="/shop" className="inline-block px-6 py-3 bg-primary text-white rounded-lg hover:bg-tertiary transition-colors font-medium">
+          <Link to="/products" className="inline-block px-6 py-3 bg-primary text-white rounded-lg hover:bg-tertiary transition-colors font-medium">
             View All Products
-          </a>
+          </Link>
         </div>
       </div>
     </section>

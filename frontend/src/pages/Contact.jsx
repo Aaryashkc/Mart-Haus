@@ -292,33 +292,6 @@ const ContactUs = () => {
             <p className="text-primary font-medium">Open: 10am - 7pm daily</p>
           </div>
         </div>
-        
-        {/* FAQ Section */}
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold text-gray-800 text-center mb-10">Frequently Asked Questions</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-secondary p-6 rounded-xl shadow-md">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">What are your delivery options?</h3>
-              <p className="text-gray-600">We offer standard delivery (3-5 business days) and express delivery (1-2 business days) throughout Nepal. International shipping is available to select countries.</p>
-            </div>
-            
-            <div className="bg-secondary p-6 rounded-xl shadow-md">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">How can I track my order?</h3>
-              <p className="text-gray-600">Once your order is shipped, you'll receive a tracking number via email. You can use this number to track your package on our website or the courier's website.</p>
-            </div>
-            
-            <div className="bg-secondary p-6 rounded-xl shadow-md">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">What is your return policy?</h3>
-              <p className="text-gray-600">We accept returns within 14 days of delivery. Items must be unused, undamaged, and in their original packaging. Please contact our customer service to initiate a return.</p>
-            </div>
-            
-            <div className="bg-secondary p-6 rounded-xl shadow-md">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Do you offer assembly services?</h3>
-              <p className="text-gray-600">Yes, we offer professional assembly services for an additional fee. You can select this option during checkout or contact our customer service team for more information.</p>
-            </div>
-          </div>
-        </div>
       </div>
       
       {/* Newsletter */}

@@ -36,7 +36,7 @@ const Footer = () => {
       ];
 
   return (
-      <div className="px-6 md:px-16 lg:px-24 xl:px-32 border-t border-gray-200 bg-secondary text-fortext">
+      <div className="px-6 md:px-16 lg:px-24 xl:px-32 border-t mt-20 border-gray-200 bg-secondary text-fortext">
           <div className="flex flex-col md:flex-row items-start justify-between gap-10 py-10 border-b border-gray-500/30 text-gray-500">
               <div>
                   <img className="w-34 md:w-32" src={Logo} alt="dummyLogoColored" />
@@ -49,7 +49,7 @@ const Footer = () => {
                           <ul className="text-sm space-y-1">
                               {section.links.map((link, i) => (
                                   <li key={i}>
-                                      <a href={link.url} className="hover:underline transition">{link.name}</a>
+                                      <a href={link.url}  target="_blank" className="hover:underline transition ">{link.name}</a>
                                   </li>
                               ))}
                           </ul>

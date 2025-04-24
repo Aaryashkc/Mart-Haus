@@ -1,16 +1,20 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link, useNavigate} from 'react-router-dom'
 import Logo from '../assets/logo.png'
 import { Menu,Search, ShoppingCart, CircleUserRound} from 'lucide-react'
 import { useAuthStore } from '../store/UseAuthStore'
-
+import { useCartStore } from '../store/UseCartStore';
+import { useSearchStore } from '../store/UseSearchStore';
 
 const Navbar = () => {
   const [open, setOpen] = React.useState(false)
-  const [cartItems, setCartItems] = useState([]);
-
     const {authUser, isCheckingAuth, setAuthUser} = useAuthStore()
-    const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+    const cartItemCount = useCartStore(state =>
+      state.items.reduce((total, item) => total + item.quantity, 0)
+    );
+    const searchQuery = useSearchStore(state => state.query);
+    const setQuery = useSearchStore(state => state.setQuery);
+    const clearQuery = useSearchStore(state => state.clearQuery);
     const navigate = useNavigate();
     const logout = () => {
         setAuthUser(null)
@@ -29,14 +33,20 @@ const Navbar = () => {
               <Link to={'/products'}>All Product</Link>
               {authUser?(<Link to={'/myorder'}>My Orders</Link>):null}
 
-              <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
-                  <input className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500" type="text" placeholder="Search products" />
-                     <Search className='size-6'/>
-              </div>
+              <form onSubmit={e => { e.preventDefault(); navigate(`/products?search=${encodeURIComponent(searchQuery)}`); }} className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
+                <input
+                  className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500"
+                  type="text"
+                  placeholder="Search products"
+                  value={searchQuery}
+                  onChange={e => setQuery(e.target.value)}
+                />
+                <button type="submit"><Search className='size-6'/></button>
+              </form>
 
               <div className="relative cursor-pointer">
-                  <button className="p-2 rounded-full bg-white shadow hover:bg-gray-50">
-                  <ShoppingCart onClick={()=>navigate('/cart')} className='size-8 text-fortext'/>
+                  <button onClick={() => navigate('/cart')} className="p-2 rounded-full bg-white shadow hover:bg-gray-50">
+                  <ShoppingCart className='size-8 text-fortext'/>
                     {cartItemCount > 0 && (
                       <span className="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
                         {cartItemCount}
@@ -82,14 +92,26 @@ const Navbar = () => {
             <Link to={'/products'}>All Product</Link>
             {authUser?(<Link to={'/myorder'}>My Orders</Link>):null}
 
-            <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
-                <input className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500" type="text" placeholder="Search products" />
-                <Search className='size-6'/>
-            </div>
+            <form onSubmit={e => { e.preventDefault(); navigate(`/products?search=${encodeURIComponent(searchQuery)}`); }} className="flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full w-full">
+                <input
+                  className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500"
+                  type="text"
+                  placeholder="Search products"
+                  value={searchQuery}
+                  onChange={e => setQuery(e.target.value)}
+                />
+                <button type="submit"><Search className='size-6'/></button>
+            </form>
 
-            <div className="relative cursor-pointer">
-            <ShoppingCart onClick={()=>navigate('/cart')} className='size-8 text-fortext'/>
-                <button  className="absolute -top-2 -right-3 text-xs text-secondary bg-tertiary w-[20px] h-[20px] rounded-full">3</button>
+            <div className="relative cursor-pointer ml-auto">
+                <button onClick={() => navigate('/cart')} className="p-2 rounded-full bg-white shadow hover:bg-gray-50">
+                  <ShoppingCart className='size-8 text-fortext'/>
+                  {cartItemCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                      {cartItemCount}
+                    </span>
+                  )}
+                </button>
             </div>
 
             {!authUser?( <button onClick={()=>navigate('/login')} className="cursor-pointer px-8 py-2 bg-primary hover:bg-tertiary transition text-secondary rounded-md">
